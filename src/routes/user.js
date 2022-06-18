@@ -7,13 +7,28 @@ const bcrypt = require('bcrypt');
 
 const { Users } = require('../models/index')
 const auth = require('../middlewares/basic')
-const bearer = require('../middlewares/bearer')
+const bearer = require('../middlewares/bearer');
+const acl = require('../middlewares/acl');
 
 
 usersRouter.get('/', home)
 usersRouter.post('/signup', signUp);
 usersRouter.post('/signin', auth(Users), signIn);
 usersRouter.get('/myorders', bearer, getOreders)
+
+////// ACL
+usersRouter.get('/img', bearer, acl('read'), (req, res) => {
+    res.send('this is new image')
+});
+usersRouter.post('/img', bearer, acl('create'), (req, res) => {
+    res.send('created')
+});
+usersRouter.put('/img', bearer, acl('update'), (req, res) => {
+    res.send('updated')
+});
+usersRouter.delete('/img', bearer, acl('delete'), (req, res) => {
+    res.send('deleted')
+});
 
 function home(req, res) {
     res.send('home page')
