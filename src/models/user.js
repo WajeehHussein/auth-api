@@ -39,6 +39,7 @@ const Users = (sequelize, DataTypes) => {
     model.authenticateBearer = async function (token) {
         try {
             const parsedToken = jwt.verify(token, process.env.API_SECRET || "secret word");
+            console.log('sssssssssssssssssssssss', parsedToken.username);
             const user = this.findOne({ where: { username: parsedToken.username } });
             if (user) {
                 return user;
